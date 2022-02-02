@@ -16,9 +16,15 @@ class PluginCodelabPlugin: FlutterPlugin, MethodCallHandler {
   /// when the Flutter Engine is detached from the Activity
   private lateinit var channel : MethodChannel
 
+  private static void setup(PluginCodelabPlugin plugin, BinaryMessenger binaryMessenger) {
+    plugin.channel = new MethodChannel(binaryMessenger, channelName);
+    plugin.channel.setMethodCallHandler(plugin);
+    plugin.synth = new Synth();
+    plugin.synth.start();
+  }
+  print(sks );
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "plugin_codelab")
-    channel.setMethodCallHandler(this)
+    setup(this, flutterPluginBinding.getBinaryMessenger());
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
